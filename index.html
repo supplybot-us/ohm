@@ -128,14 +128,14 @@
   allowfullscreen></iframe>
 <script>
   /* ✏️ Paste your Supplybot web app address here: Apps Script → Deploy → Manage deployments → the Web app URL (it ends in /exec) */
-  var APP_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+  var APP_URL = 'https://script.google.com/macros/s/AKfycbwE1_b6XvbfkmAij2ELy2s6824rpWEyhZTfp0jciIzDslEFMRfmaJlUiO9YMCOazzfE/exec';
 
   (function () { try { var l = document.getElementById('ico'), im = new Image(); im.onload = function () { var c = document.createElement('canvas'); c.width = c.height = 180;
     var g = c.getContext('2d'), k = Math.min(180 / im.naturalWidth || 1, 180 / im.naturalHeight || 1); g.drawImage(im, 0, 0, 180, 180); var u = c.toDataURL('image/png');
     var p = document.createElement('link'); p.rel = 'icon'; p.type = 'image/png'; p.href = u; document.head.appendChild(p); var t = document.createElement('link'); t.rel = 'apple-touch-icon'; t.href = u; document.head.appendChild(t); }; im.src = l.href; } catch (x) {} })();
   /* ✏️ Optional: your shop deployment and an order link with Supplybot saved on it (🎨 Look → 🤖 guide). Ohm's own picture is borrowed from
      there; leave them empty to show the standard Supplybot. */
-  var OHM_EXEC = 'https://script.google.com/macros/s/AKfycbwE1_b6XvbfkmAij2ELy2s6824rpWEyhZTfp0jciIzDslEFMRfmaJlUiO9YMCOazzfE/exec', OHM_SHOP = '0bf5d70823434753a1c07315b5b4265f';
+  var OHM_EXEC = 'https://script.google.com/macros/s/AKfycbzgx8mp1x_jkTNlhQdP5lNokp8aEMZOk4lp591m54IKlKksane-tw4myoK8wyQLqXMy/exec', OHM_SHOP = '0bf5d70823434753a1c07315b5b4265f';
 
   /* ✨ the scene: stars, Ohm (remembered on this device after the first visit), and a few status lines */
   (function () { var w = document.getElementById('wait'); for (var k = 0; k < 80; k++) { var st = document.createElement('span'); st.className = 'star';
