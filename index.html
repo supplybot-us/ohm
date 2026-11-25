@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07071a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Supplybot">
+<title>Supplybot · Ohm</title>
+<!-- 🔖 Supplybot on the browser tab (and a picture version for Safari and the iPhone home screen, made when the page opens) -->
+<link id="ico" rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%22-80 -40 460 532%22><rect x=%22-80%22 y=%22-40%22 width=%22460%22 height=%22532%22 rx=%22110%22 fill=%22%2307071a%22/><g fill=%22%23e2e8f0%22> <rect x=%2285%22 y=%223%22 width=%2225%22 height=%2272%22 rx=%2212.5%22/><rect x=%22190%22 y=%223%22 width=%2225%22 height=%2272%22 rx=%2212.5%22/> <rect x=%2218%22 y=%2265%22 width=%22264%22 height=%22207%22 rx=%2270%22/> <rect fill=%22%2307071a%22 x=%2253%22 y=%22105%22 width=%22194%22 height=%22127%22 rx=%2240%22/> <circle fill=%22%2322d3ee%22 cx=%22110%22 cy=%22162%22 r=%2220%22/><circle fill=%22%2322d3ee%22 cx=%22190%22 cy=%22162%22 r=%2220%22/> <path fill=%22none%22 stroke=%22%2322d3ee%22 stroke-width=%2213%22 stroke-linecap=%22round%22 d=%22M118 198Q150 222 182 198%22/> <rect x=%22128%22 y=%22268%22 width=%2244%22 height=%2226%22/> <rect x=%2245%22 y=%22290%22 width=%22210%22 height=%22158%22 rx=%2238%22/> <rect x=%225%22 y=%22312%22 width=%2232%22 height=%2288%22 rx=%2216%22/><rect x=%22263%22 y=%22312%22 width=%2232%22 height=%2288%22 rx=%2216%22/></g> <path class=%22eye bi-bolt%22 d=%22M165 313L125 373H148L137 425L180 358H157Z%22/></svg>">
+<style>
+  html, body { margin: 0; height: 100%; background: #07071a; color: #e6e9ff; font: 16px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif; overflow: hidden; }
+  #app { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #07071a; }
+  #wait { position: fixed; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; overflow: hidden; z-index: 2; transition: opacity .6s, transform .6s;
+    background: radial-gradient(ellipse 85% 65% at 50% 40%, #1a1440 0%, #0b0a24 55%, #07071a 100%); }
+  #wait.gone { opacity: 0; transform: scale(1.05); pointer-events: none; }
+  #wait > .stage { position: relative; z-index: 2; }
+  /* 🌌 a shifting aurora and twinkling stars */
+  .aur { position: absolute; width: 90vmax; height: 40vmax; border-radius: 50%; filter: blur(80px); opacity: .32; z-index: 0; mix-blend-mode: screen; animation: aur 16s ease-in-out infinite alternate; }
+  .aur.a { background: #22d3ee; left: -30vmax; top: -12vmax; transform: rotate(-12deg); }
+  .aur.b { background: #a855f7; right: -34vmax; bottom: -16vmax; animation-duration: 21s; transform: rotate(14deg); }
+  .aur.c { background: #f472b6; left: 20vmax; top: 30vmax; width: 50vmax; height: 22vmax; opacity: .16; animation-duration: 25s; }
+  @keyframes aur { to { transform: translate(10vmax, 6vmax) rotate(8deg) scale(1.15); } }
+  .star { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; opacity: .25; z-index: 1; animation: tw 3s ease-in-out infinite; }
+  @keyframes tw { 50% { opacity: .95; transform: scale(1.7); } }
+  /* Ω with electrons racing round it, and Ohm floating inside */
+  .omega { position: relative; width: 240px; height: 216px; margin: 0 auto; }
+  .omega svg.om { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .om .glow { fill: none; stroke: url(#og); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 10px rgba(34, 211, 238, .7)) drop-shadow(0 0 22px rgba(168, 85, 247, .5)); }
+  .om .trace { fill: none; stroke: #e0f7ff; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 18 300; animation: trace 2.2s linear infinite; opacity: .9; }
+  @keyframes trace { to { stroke-dashoffset: -318; } }
+  .el { position: absolute; left: 0; top: 0; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #f0fdff; box-shadow: 0 0 8px 2px #22d3ee, 0 0 18px 4px rgba(168, 85, 247, .7);
+    offset-path: path('M44 196 H86 V174 C52 158 30 130 30 96 C30 50 70 16 120 16 C170 16 210 50 210 96 C210 130 188 158 154 174 V196 H196'); offset-rotate: 0deg; animation: run 3.2s linear infinite; z-index: 1; }
+  .el:nth-of-type(2) { animation-delay: -1.07s; width: 8px; height: 8px; } .el:nth-of-type(3) { animation-delay: -2.13s; width: 7px; height: 7px; }
+  @keyframes run { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+  .ohm { position: absolute; left: 50%; top: 44%; width: 104px; height: 150px; margin: -78px 0 0 -52px; object-fit: contain; animation: ohmDo 3.2s ease-in-out infinite; transform-origin: 50% 90%; z-index: 2; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .5)) drop-shadow(0 0 16px rgba(34, 211, 238, .35)); }
+  svg.ohm .oeye { transform-box: view-box; transform-origin: 150px 170px; animation: blink 4s infinite; }
+  /* ⚡ his move, every 3.2 s: crouch, leap, a full spin, arms up, lightning into the Ω (it flashes, a shock wave bursts out), then he lands */
+  @keyframes ohmDo { 0%, 100% { transform: translateY(0) rotate(-2deg); } 10% { transform: translateY(7px) scale(1.07, .9); } 22% { transform: translateY(-30px) scale(.95, 1.06); }
+    34% { transform: translateY(-36px) rotateY(180deg); } 46% { transform: translateY(-36px) rotateY(360deg); } 54%, 76% { transform: translateY(-32px) scale(1.06); } 88% { transform: translateY(5px) scale(1.05, .93); } }
+  svg.ohm .arm { transform-box: view-box; } svg.ohm .arm.l { transform-origin: 33px 338px; animation: armL 3.2s ease-in-out infinite; } svg.ohm .arm.r { transform-origin: 267px 338px; animation: armR 3.2s ease-in-out infinite; }
+  @keyframes armL { 0%, 46%, 86%, 100% { transform: rotate(0); } 54%, 78% { transform: rotate(152deg); } }
+  @keyframes armR { 0%, 46%, 86%, 100% { transform: rotate(0); } 54%, 78% { transform: rotate(-152deg); } }
+  svg.ohm .hand { animation: hand 3.2s linear infinite; } @keyframes hand { 0%, 52%, 80%, 100% { fill: #ffe27a; filter: none; } 56%, 76% { fill: #e0fbff; filter: drop-shadow(0 0 10px #22d3ee); } }
+  svg.ohm .ew { animation: eyes 3.2s linear infinite; } @keyframes eyes { 0%, 52%, 80%, 100% { fill: #f8fafc; } 56%, 76% { fill: #67e8f9; } }
+  .zap { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 1; pointer-events: none; opacity: 0; animation: zapOn 3.2s steps(1) infinite; }
+  .zap path { fill: none; stroke: #e0fbff; stroke-width: 3.5; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(0 0 4px #22d3ee) drop-shadow(0 0 10px #a855f7); animation: flick .12s steps(2) infinite; }
+  .zap path.up { stroke-width: 2.5; }
+  @keyframes zapOn { 0% { opacity: 0; } 56% { opacity: 1; } 60% { opacity: .4; } 62% { opacity: 1; } 68% { opacity: .6; } 70% { opacity: 1; } 77% { opacity: 0; } }
+  @keyframes flick { 50% { transform: translate(1px, -1px); opacity: .7; } }
+  .om .glow { animation: omFlash 3.2s ease-in-out infinite; } @keyframes omFlash { 0%, 54%, 82%, 100% { stroke-width: 9; filter: drop-shadow(0 0 10px rgba(34, 211, 238, .7)) drop-shadow(0 0 22px rgba(168, 85, 247, .5)); }
+    60%, 74% { stroke-width: 11; filter: brightness(1.6) drop-shadow(0 0 14px #67e8f9) drop-shadow(0 0 34px #d946ef); } }
+  .boom { position: absolute; left: 50%; top: 45%; width: 60px; height: 60px; margin: -30px 0 0 -30px; border-radius: 50%; border: 3px solid #67e8f9; box-shadow: 0 0 24px #22d3ee, inset 0 0 18px #a855f7; opacity: 0; z-index: 0; animation: boom 3.2s ease-out infinite; }
+  @keyframes boom { 0%, 57% { transform: scale(.4); opacity: 0; } 60% { opacity: 1; } 80% { transform: scale(4.4); opacity: 0; } 100% { opacity: 0; } }
+  @keyframes float { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-12px) rotate(3deg); } }
+  @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 94% { transform: scaleY(.1); } }
+  .tag { display: inline-block; margin-top: 2px; padding: 3px 14px; border-radius: 999px; font: 900 13px/1.4 -apple-system, "Segoe UI", Roboto, sans-serif; letter-spacing: .12em; text-transform: uppercase;
+    color: #07071a; background: linear-gradient(90deg, #22d3ee, #a855f7); box-shadow: 0 0 18px rgba(34, 211, 238, .45); }
+  .logo { font-size: 32px; font-weight: 900; letter-spacing: .01em; margin-top: 8px; background: linear-gradient(90deg, #67e8f9, #e6e9ff 45%, #c4b5fd 60%, #67e8f9); background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent; animation: sheen 4s linear infinite; }
+  @keyframes sheen { to { background-position: -200% 0; } }
+  /* 📈 the oscilloscope */
+  .scope { position: relative; width: 250px; height: 64px; margin: 16px auto 10px; border-radius: 14px; overflow: hidden; border: 1.5px solid rgba(34, 211, 238, .45);
+    background: linear-gradient(rgba(34, 211, 238, .12) 1px, transparent 1px) 0 0 / 100% 16px, linear-gradient(90deg, rgba(34, 211, 238, .12) 1px, transparent 1px) 0 0 / 25px 100%, rgba(10, 12, 40, .7);
+    box-shadow: inset 0 0 18px rgba(34, 211, 238, .2), 0 0 22px rgba(168, 85, 247, .25); }
+  .scope svg { position: absolute; left: 0; top: 0; width: 500px; height: 64px; animation: wave 1.6s linear infinite; }
+  .scope path { fill: none; stroke: #67e8f9; stroke-width: 2.5; filter: drop-shadow(0 0 4px #22d3ee); }
+  @keyframes wave { to { transform: translateX(-100px); } }
+  #msg { color: #c7d2fe; min-height: 1.5em; transition: opacity .3s; } #msg.fade { opacity: 0; }
+  #help { display: none; }
+  @media (max-width: 480px) { .omega { transform: scale(.85); } .logo { font-size: 28px; } }
+  @media (prefers-reduced-motion: reduce) { #wait *, #wait *::after { animation: none !important; } .el { display: none; } }
+</style>
+</head>
+<body>
+<div id="wait">
+  <span class="aur a"></span><span class="aur b"></span><span class="aur c"></span>
+  <div class="stage">
+    <div class="omega">
+      <svg class="om" viewBox="0 0 240 216" aria-hidden="true"><defs><linearGradient id="og" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".55" stop-color="#818cf8"/><stop offset="1" stop-color="#d946ef"/></linearGradient></defs>
+        <path class="glow" id="op" d="M44 196 H86 V174 C52 158 30 130 30 96 C30 50 70 16 120 16 C170 16 210 50 210 96 C210 130 188 158 154 174 V196 H196"/><path class="trace" d="M44 196 H86 V174 C52 158 30 130 30 96 C30 50 70 16 120 16 C170 16 210 50 210 96 C210 130 188 158 154 174 V196 H196"/></svg>
+      <svg class="ohm" id="ohmDef" viewBox="0 0 300 500" role="img" aria-label="Ohm"><defs>
+        <linearGradient id="og1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset=".5" stop-color="#f2b92f"/><stop offset="1" stop-color="#c98a12"/></linearGradient>
+        <linearGradient id="og2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d79a18"/><stop offset=".45" stop-color="#ffd95a"/><stop offset="1" stop-color="#c98a12"/></linearGradient>
+        <radialGradient id="og3" cx=".5" cy=".4" r=".6"><stop offset="0" stop-color="#2b3158"/><stop offset="1" stop-color="#121531"/></radialGradient></defs>
+        <!-- 👑 crown with a green gem -->
+        <path d="M92 92 L100 38 L128 66 L150 26 L172 66 L200 38 L208 92 Z" fill="url(#og2)" stroke="#a86f0c" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="100" cy="36" r="7" fill="#ffe27a"/><circle cx="150" cy="24" r="8" fill="#ffe27a"/><circle cx="200" cy="36" r="7" fill="#ffe27a"/>
+        <path d="M150 60 L160 72 L150 84 L140 72 Z" fill="#22c55e" stroke="#0f7a3a" stroke-width="2"/>
+        <!-- head and face screen -->
+        <rect x="22" y="88" width="256" height="200" rx="66" fill="url(#og1)" stroke="#a86f0c" stroke-width="5"/>
+        <path d="M52 120 Q60 100 92 98 L150 98" fill="none" stroke="#fff4c2" stroke-width="8" stroke-linecap="round" opacity=".7"/>
+        <rect x="52" y="122" width="196" height="132" rx="38" fill="url(#og3)" stroke="#7a520a" stroke-width="4"/>
+        <g class="oeye"><path class="ew" d="M78 176 Q104 150 136 166 Q108 186 78 176 Z" fill="#f8fafc"/><path class="ew" d="M222 176 Q196 150 164 166 Q192 186 222 176 Z" fill="#f8fafc"/>
+          <circle cx="110" cy="170" r="8" fill="#121531"/><circle cx="190" cy="170" r="8" fill="#121531"/></g>
+        <path d="M150 198 C130 186 106 190 86 206 C98 214 120 214 132 206 C138 212 144 214 150 210 C156 214 162 212 168 206 C180 214 202 214 214 206 C194 190 170 186 150 198 Z" fill="#e23b2e" stroke="#7f1d1d" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M118 232 Q150 244 182 232" fill="none" stroke="#e23b2e" stroke-width="7" stroke-linecap="round" opacity=".9"/>
+        <!-- neck, body, arms -->
+        <rect x="126" y="284" width="48" height="26" fill="#c98a12"/>
+        <g class="arm l"><rect x="16" y="330" width="34" height="96" rx="17" fill="url(#og2)" stroke="#a86f0c" stroke-width="4"/><circle class="hand" cx="33" cy="420" r="11" fill="#ffe27a"/></g><g class="arm r"><rect x="250" y="330" width="34" height="96" rx="17" fill="url(#og2)" stroke="#a86f0c" stroke-width="4"/><circle class="hand" cx="267" cy="420" r="11" fill="#ffe27a"/></g>
+        <rect x="46" y="304" width="208" height="168" rx="40" fill="url(#og1)" stroke="#a86f0c" stroke-width="5"/>
+        <path d="M70 330 Q80 314 110 312" fill="none" stroke="#fff4c2" stroke-width="7" stroke-linecap="round" opacity=".65"/>
+        <!-- 🖤 the little black ribbon at his shoulder -->
+        <path d="M70 318 L52 300 L50 330 Z M70 318 L88 300 L90 330 Z" fill="#1f1f2e"/><circle cx="70" cy="318" r="7" fill="#1f1f2e"/><path d="M66 324 L58 352 M74 324 L82 352" stroke="#1f1f2e" stroke-width="6" stroke-linecap="round"/>
+        <!-- chest emblem -->
+        <circle cx="150" cy="392" r="42" fill="#121531" stroke="#ffe27a" stroke-width="5"/>
+        <path d="M150 360 L178 412 H122 Z" fill="none" stroke="#ffe27a" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M137 398 Q150 386 163 398 Q150 408 137 398 Z" fill="#ffe27a"/><circle cx="150" cy="398" r="4" fill="#121531"/>
+        <path d="M110 420 Q150 446 190 420" fill="none" stroke="#22d3ee" stroke-width="3" opacity=".8"/>
+      </svg>
+      <img class="ohm" id="ohmImg" alt="Ohm" hidden>
+      <i class="el"></i><i class="el"></i><i class="el"></i>
+      <span class="boom"></span>
+      <svg class="zap" viewBox="0 0 240 216" aria-hidden="true">
+        <path d="M80 54 L66 62 L70 70 L52 76 L56 84 L32 92"/><path d="M160 54 L174 62 L170 70 L188 76 L184 84 L208 92"/>
+        <path d="M110 30 L104 22 L114 18 L108 10" class="up"/><path d="M130 30 L136 22 L126 18 L132 10" class="up"/></svg>
+    </div>
+    <div class="tag" id="ohmName">Ohm</div>
+    <div class="logo">Supplybot</div>
+    <div class="scope" id="spin"><svg viewBox="0 0 500 64" preserveAspectRatio="none"><path d="M0 32 Q25 6 50 32 T100 32 Q125 6 150 32 T200 32 Q225 6 250 32 T300 32 Q325 6 350 32 T400 32 Q425 6 450 32 T500 32"/></svg></div>
+    <div id="msg">Ohm is warming up…</div>
+  </div>
+</div>
+<iframe id="app" title="Supplybot"
+  allow="camera; microphone; geolocation; clipboard-read; clipboard-write; fullscreen; display-capture; web-share; autoplay"
+  allowfullscreen></iframe>
+<script>
+  /* ✏️ Paste your Supplybot web app address here: Apps Script → Deploy → Manage deployments → the Web app URL (it ends in /exec) */
+  var APP_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+
+  (function () { try { var l = document.getElementById('ico'), im = new Image(); im.onload = function () { var c = document.createElement('canvas'); c.width = c.height = 180;
+    var g = c.getContext('2d'), k = Math.min(180 / im.naturalWidth || 1, 180 / im.naturalHeight || 1); g.drawImage(im, 0, 0, 180, 180); var u = c.toDataURL('image/png');
+    var p = document.createElement('link'); p.rel = 'icon'; p.type = 'image/png'; p.href = u; document.head.appendChild(p); var t = document.createElement('link'); t.rel = 'apple-touch-icon'; t.href = u; document.head.appendChild(t); }; im.src = l.href; } catch (x) {} })();
+  /* ✏️ Optional: your shop deployment and an order link with Supplybot saved on it (🎨 Look → 🤖 guide). Ohm's own picture is borrowed from
+     there; leave them empty to show the standard Supplybot. */
+  var OHM_EXEC = 'https://script.google.com/macros/s/AKfycbwE1_b6XvbfkmAij2ELy2s6824rpWEyhZTfp0jciIzDslEFMRfmaJlUiO9YMCOazzfE/exec', OHM_SHOP = '0bf5d70823434753a1c07315b5b4265f';
+
+  /* ✨ the scene: stars, Ohm (remembered on this device after the first visit), and a few status lines */
+  (function () { var w = document.getElementById('wait'); for (var k = 0; k < 80; k++) { var st = document.createElement('span'); st.className = 'star';
+      st.style.left = (Math.random() * 100) + '%'; st.style.top = (Math.random() * 100) + '%'; st.style.animationDelay = (Math.random() * 3) + 's'; st.style.animationDuration = (2 + Math.random() * 3) + 's'; w.insertBefore(st, w.firstChild); }
+    function showOhm(svg) { if (!svg || !/^<svg[\s>]/.test(svg)) return; if (!/^<svg[^>]*\sxmlns=/.test(svg)) svg = svg.replace(/^<svg/, '<svg xmlns="http:' + '\x2F\x2F' + 'www.w3.org/2000/svg"');
+      if (/xlink:/.test(svg) && !/xmlns:xlink=/.test(svg)) svg = svg.replace(/^<svg/, '<svg xmlns:xlink="http:' + '\x2F\x2F' + 'www.w3.org/1999/xlink"');
+      var im = document.getElementById('ohmImg'); im.onload = function () { im.hidden = false; var d = document.getElementById('ohmDef'); if (d) d.style.display = 'none'; }; im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); }
+    try { showOhm(localStorage.getItem('ohmBot') || ''); } catch (x) {}
+    if (OHM_EXEC && OHM_SHOP) fetch(OHM_EXEC + '?shop=' + encodeURIComponent(OHM_SHOP) + '&api=look').then(function (r) { return r.json(); }).then(function (L) {
+      if (L && L.bot) { showOhm(L.bot); try { localStorage.setItem('ohmBot', L.bot); } catch (x) {} } }).catch(function () {});
+    var M = ['Ohm is warming up…', 'Measuring the resistance…', 'Balancing the circuits…', 'Counting the shelves…', 'Syncing your inventory…', 'Almost connected…'], n = 0, el = document.getElementById('msg');
+    window.__msgT = setInterval(function () { if (el.style.display === 'none' || /Opening Supplybot/.test(el.textContent)) return; el.classList.add('fade'); setTimeout(function () { n = (n + 1) % M.length; el.textContent = M[n]; el.classList.remove('fade'); }, 300); }, 2000); })();
+  var app = document.getElementById('app'), wait = document.getElementById('wait'), ready = false, go = APP_URL + (location.search || '');   /* links like ?setup=1 or ?order=… are passed through */
+  /* 📱 iPhone, iPad (every browser there) and Safari on a Mac block your Google sign-in inside another website's frame, so Google
+     answers "401". There, Supplybot opens directly instead (your sign-in works); everywhere else it opens inside this page. */
+  var ua = navigator.userAgent, apple = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    || (/Safari/.test(ua) && !/Chrome|Chromium|CriOS|FxiOS|Edg|OPR|Android/.test(ua));
+  /* inside another site's frame (e.g. a domain forwarded "with masking"), a page may only switch the whole tab after a tap */
+  var framed = true; try { framed = window.top !== window; } catch (x) { framed = true; }
+  /* no buttons: it keeps waiting and keeps trying to open Supplybot by itself */
+  /* inside another site's frame it only ever opens Supplybot in the whole tab (never inside the frame, where iPhones answer 401);
+     iPhones allow that after any touch, so a touch anywhere on the screen also opens it, no button needed */
+  function direct() { if (framed) { try { window.top.location.href = go; } catch (x) {} return; } location.replace(go); }
+  if (framed) ['pointerup', 'touchend', 'keydown'].forEach(function (ev) { document.addEventListener(ev, function () { if (!ready) direct(); }, true); });
+  if (apple && framed) { direct(); setInterval(function () { if (!ready) direct(); }, 8000); }
+  else if (apple) location.replace(go);
+  else app.src = go;
+  /* Supplybot says "ready" once it has opened inside this page */
+  window.addEventListener('message', function (e) {
+    if (!/\.googleusercontent\.com$/.test(new URL(e.origin).hostname)) return;
+    if (e.data && e.data.supplybot === 'ready') { ready = true; setTimeout(function () { wait.classList.add('gone'); }, 450); }
+  });
+  /* not open inside this page after 10 seconds (usually Google sign-in, which can't show inside another site): open it directly, by itself.
+     The button stays as a backup in case the browser stops the switch. */
+  if (!(apple && framed)) setTimeout(function () { if (ready) return; document.getElementById('msg').textContent = 'Opening Supplybot…'; direct();
+    setInterval(function () { if (!ready) direct(); }, 10000); }, 10000);   /* ✏️ how long to wait before opening it directly (ms) */
+</script>
+</body>
+</html>
