@@ -59,6 +59,8 @@
     color: #07071a; background: linear-gradient(90deg, #22d3ee, #a855f7); box-shadow: 0 0 18px rgba(34, 211, 238, .45); }
   .logo { font-size: 32px; font-weight: 900; letter-spacing: .01em; margin-top: 8px; background: linear-gradient(90deg, #67e8f9, #e6e9ff 50%, #c4b5fd); -webkit-background-clip: text; background-clip: text; color: transparent; }
   #msg { color: #c7d2fe; min-height: 1.5em; margin-top: 10px; transition: opacity .3s; } #msg.fade { opacity: 0; }
+  #msg.tapme { font-weight: 800; color: #fde68a; animation: tapme 1.4s ease-in-out infinite; } @keyframes tapme { 50% { transform: scale(1.06); } }
+  #wait { cursor: pointer; }
   #help { display: none; }
   @media (max-width: 480px) { .cosmos { transform: scale(.86); margin: -14px auto -16px; } .logo { font-size: 28px; } }
   @media (prefers-reduced-motion: reduce) { #wait *, #wait *::after { animation: none !important; } .portal, .rim, .hero { opacity: 1; transform: none; } .swirl { opacity: 1; } .pulse, .tw { display: none; } }
@@ -178,6 +180,10 @@
   if (!/^https:\/\/script\.google\.com\/(a\/[^\/]+\/)?macros\/s\/[A-Za-z0-9_-]{20,}\/(exec|dev)$/.test(cleanUrl.split('?')[0])) bad = cleanUrl.indexOf('PASTE_YOUR') >= 0 ? 'Almost there: paste your Supplybot web app address into this page (the line that says APP_URL).' : 'The APP_URL in this page isn’t a Supplybot web app address. It should look like https://script.google.com/macros/s/…/exec';
   else if (OHM_EXEC && cleanUrl.split('?')[0] === OHM_EXEC) bad = 'APP_URL is your public shop (order links) address. Use the address you open Supplybot with: Apps Script → Deploy → Manage deployments → the app’s Web app URL.';
   if (bad) { clearInterval(window.__msgT); var mm = document.getElementById('msg'); mm.textContent = '⚠️ ' + bad; mm.style.maxWidth = '420px'; mm.style.margin = '0 auto'; mm.style.opacity = '1'; } else {
+  /* 👆 inside another site's frame (a domain forwarded "with masking"), Safari (and some others) only let this page open Supplybot after a
+     click or tap: say so, so it never looks stuck (any click or key anywhere opens it) */
+  function tapHint() { if (ready) return; clearInterval(window.__msgT); var mm = document.getElementById('msg'); mm.textContent = '👆 Tap or click anywhere to open Supplybot'; mm.classList.add('tapme'); }
+  if (framed) setTimeout(tapHint, apple ? 1500 : 12000);
   if (framed) ['pointerup', 'touchend', 'keydown'].forEach(function (ev) { document.addEventListener(ev, function () { if (!ready) direct(); }, true); });
   if (apple && framed) { direct(); setInterval(function () { if (!ready) direct(); }, 8000); }
   else if (apple) location.replace(go);
