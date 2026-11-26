@@ -134,7 +134,10 @@
     <div id="msg">Ohm is opening the cosmos…</div>
   </div>
 </div>
+<!-- 🔒 Supplybot may only take over the whole tab when you click something in it (like its ⟳ Reload), never by itself: Google's page
+     sometimes reloads itself in the whole tab, which would bring back its "created by a Google Apps Script user" bar -->
 <iframe id="app" title="Supplybot"
+  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads allow-storage-access-by-user-activation allow-top-navigation-by-user-activation allow-pointer-lock allow-presentation allow-orientation-lock"
   allow="camera; microphone; geolocation; clipboard-read; clipboard-write; fullscreen; display-capture; web-share; autoplay"
   allowfullscreen></iframe>
 <script>
