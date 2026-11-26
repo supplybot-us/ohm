@@ -191,7 +191,12 @@
   /* Supplybot says "ready" once it has opened inside this page */
   window.addEventListener('message', function (e) {
     if (!/\.googleusercontent\.com$/.test(new URL(e.origin).hostname)) return;
-    if (e.data && e.data.supplybot === 'ready') { ready = true; setTimeout(function () { wait.classList.add('gone'); }, 450); }
+    if (e.data && e.data.supplybot === 'ready') { ready = true; setTimeout(function () { wait.classList.add('gone'); }, 450);
+      /* ✂️ Google's "created by a Google Apps Script user" bar: Supplybot says how tall its own area is; the difference is the bar, so the
+         frame moves up by exactly that much (no bar, no move, so Supplybot's header is never cut) */
+      var h = Number(e.data.h), gap = h > 0 ? Math.round(app.getBoundingClientRect().height - h) : 0;
+      if (gap > 2 && gap < 160) { app.style.bottom = 'auto'; app.style.top = (-gap) + 'px'; app.style.height = 'calc(100% + ' + gap + 'px)'; }
+      else if (gap <= 2 && gap > -2 && app.style.top) { /* already tucked away */ } }
   });
   /* not open inside this page after 10 seconds (usually Google sign-in, which can't show inside another site): open it directly, by itself.
      The button stays as a backup in case the browser stops the switch. */
